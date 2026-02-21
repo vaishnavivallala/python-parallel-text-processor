@@ -1,8 +1,11 @@
 import os
+import re
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RULES_DIR = os.path.join(BASE_DIR, "rules")
 
+
+RULES_DIR = os.path.join(BASE_DIR, "rules")
 POSITIVE_WORDS_FILE = os.path.join(RULES_DIR, "positive_words.txt")
 NEGATIVE_WORDS_FILE = os.path.join(RULES_DIR, "negative_words.txt")
 
@@ -17,13 +20,21 @@ def load_words(file_path):
     return words
 
 
+
 positive_words = load_words(POSITIVE_WORDS_FILE)
 negative_words = load_words(NEGATIVE_WORDS_FILE)
 
 
 def analyze_sentiment(text):
+    """
+    Rule-based sentiment analysis
+    Returns: sentiment_label, sentiment_score
+    """
+
+    text = text.lower()
+    words = re.findall(r"\b\w+\b", text)
+
     score = 0
-    words = text.lower().split()
 
     for word in words:
         if word in positive_words:
@@ -38,4 +49,4 @@ def analyze_sentiment(text):
     else:
         label = "neutral"
 
-    return score, label
+    return label, score
